@@ -22,6 +22,19 @@ Set up:
 brew install python3
 mkvirtualenv cascadiaquakes --python=python3
 (cascadiaquakes) pip install -r requirements.txt
+(cascadiaquakes) pip install -e .
 ```
 
+Create secrets.json file with your twitter credentials. To make a new Twitter app, go to [dev.twitter.com](https://dev.twitter.com).
+
+```json
+{
+    "twitter-example": {
+        "consumer_key": "asdf",
+        "consumer_secret": "asdf",
+        "access_token":"asdf",
+        "access_token_secret":"asdf"
+    }
+}
+```
 

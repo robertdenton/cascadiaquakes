@@ -1,7 +1,7 @@
 ### Test for name package
 
-from alert import script
+from scratch import add
 
 def test_name(): 
-    foo = script.add(1,2)
+    foo = add(1,2)
     assert(foo == 3)

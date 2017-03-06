@@ -11,8 +11,8 @@ config = {
     'download_url': 'https://github.com/robertdenton/cascadia-quakes',
     'author_email': 'rob@robertrdenton.com',
     'version': '0.1',
-    'install_requires': ['pytest','requests'],
-    'packages': ['alert'],
+    'install_requires': ['pytest','requests','tweepy'],
+    'packages': [],
     'scripts': []
 }
 
