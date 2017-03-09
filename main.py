@@ -28,9 +28,9 @@ logger.addHandler(fileLogger)
 # ------------------------------------------------------------------------------------
 
 # Last hour
-r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')
+#r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')
 # Last day (for testing)
-#r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
+r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
 # Last month (for testing)
 #r = requests.get('http://127.0.0.1/github/robertdenton/cascadiaquakes/testdata.json')
 
