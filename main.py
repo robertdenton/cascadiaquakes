@@ -2,6 +2,9 @@ import requests, tweepy, boto3
 import logging, logging.handlers, os, json
 from functions import getSecret
 
+# Set current dir
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # ------------------------------------------------------------------------------------
 # LOGGING INITIALIZATION
 # ------------------------------------------------------------------------------------
@@ -12,9 +15,9 @@ logger = logging.getLogger('logger')
 logger.setLevel(logging.ERROR)
 
 # set vars
-log_file_dir = "./logs/"
+log_file_dir = "logs/"
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-fileLogger = logging.handlers.RotatingFileHandler(filename=("{0}debug.log".format(log_file_dir)), maxBytes=256*1024, backupCount=5) # 256 x 1024 = 256K
+fileLogger = logging.handlers.RotatingFileHandler(filename=("{0}/{1}debug.log".format(dir_path,log_file_dir)), maxBytes=256*1024, backupCount=5) # 256 x 1024 = 256K
 fileLogger.setFormatter(formatter)
 logger.addHandler(fileLogger)
 
@@ -43,12 +46,12 @@ logger.debug("{} earthquakes in the past hour".format(len(quakes)))
 # read hash dictionary file
 if len(quakes):
     # Test to see if id.json exists (good for first run)
-    if  os.path.exists('id.json')==False: 
+    if  os.path.exists('{0}/id.json'.format(dir_path))==False: 
         old = {}
         logger.debug("no id json file")
     else:
         # Open up id file # See: https://docs.python.org/3/library/functions.html#open
-        id_json = open('id.json', 'r')
+        id_json = open('{0}/id.json'.format(dir_path), 'r')
         old = json.load(id_json)
         logger.debug("got id json file")
     #for key, value in old.items():
@@ -102,14 +105,7 @@ if len(quakes):
                 except tweepy.TweepError as err:
                     logger.error(err)
                     success = False
-                # make new dictionary 
-                #new[quakeid] = {}
-                #new[quakeid]['mag'] = mag
-                #new[quakeid]['loc'] = loc
-                #new[quakeid]['url'] = url
-                #new[quakeid]['tsu'] = tsu
-                # Tweet it
     logger.debug("new length: {}".format(len(new)))
     # Open up id file to override
-    new_id_json = open('id.json', 'w')
+    new_id_json = open('{0}/id.json'.format(dir_path), 'w')
     json.dump(new, new_id_json, indent=4)
