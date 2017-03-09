@@ -8,8 +8,8 @@ from functions import getSecret
 
 logger = logging.getLogger('logger')
 # set level
-logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
+#logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 # set vars
 log_file_dir = "./logs/"
