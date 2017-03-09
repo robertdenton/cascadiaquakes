@@ -5,3 +5,4 @@ __pycache__
 secrets.json
 id.json
 logs/*
+README.secret
