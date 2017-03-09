@@ -1,4 +1,4 @@
-import requests, tweepy
+import requests, tweepy, boto3
 import logging, logging.handlers, os, json
 from functions import getSecret
 
@@ -38,7 +38,7 @@ logger.debug("got usgs data")
 usgs = r.json()
 
 quakes = usgs['features']
-logger.debug("{} earthquakes in the past day".format(len(quakes)))
+logger.debug("{} earthquakes in the past hour".format(len(quakes)))
 
 # read hash dictionary file
 if len(quakes):
@@ -84,15 +84,21 @@ if len(quakes):
                 consumer_secret = secrets['consumer_secret']
                 access_token = secrets['access_token']
                 access_token_secret = secrets['access_token_secret']
+                # Set up SNS
+                aws = getSecret('aws-arn')
+                client = boto3.client('sns')
                 # Tweepy auth
                 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
                 auth.set_access_token(access_token, access_token_secret)
                 api = tweepy.API(auth)
                 # Construct tweet text
-                tweet_text = "{0} - {1}: {2}".format(mag,loc,url)
+                content = "{0} - {1}: {2}".format(mag,loc,url)
                 try:
-                    #api.update_status(status=tweet_text) # Uncomment this to go live
-                    logger.debug('Success! Tweet sent: ' + tweet_text)
+                    # Send tweet (Uncomment to go live)
+                    api.update_status(status=content)
+                    # Send text (Uncomment to go live)
+                    response = client.publish(TopicArn=aws,Message=content)
+                    logger.debug('Success! Data sent: ' + content)
                 except tweepy.TweepError as err:
                     logger.error(err)
                     success = False
