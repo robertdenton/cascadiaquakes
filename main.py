@@ -31,9 +31,9 @@ logger.addHandler(fileLogger)
 # ------------------------------------------------------------------------------------
 
 # Last hour
-r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')
+#r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')
 # Last day (for testing)
-#r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson')
+r = requests.get('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
 # Last month (for testing)
 #r = requests.get('http://127.0.0.1/github/robertdenton/cascadiaquakes/testdata.json')
 
@@ -80,31 +80,33 @@ if len(quakes):
             # See: https://github.com/robertdenton/cascadiaquakes/issues/
             # and (40.6 < newlat < 49.6)
             if (-128.8 < newlon < -121.3) and (40.6 < newlat < 49.6):
-                logger.debug("{0}, {1}: CASCADIA!!!".format(newlon, newlat))
-                # Get access token from secrets.json
-                secrets = getSecret('twitter-rob')
-                consumer_key = secrets['consumer_key']
-                consumer_secret = secrets['consumer_secret']
-                access_token = secrets['access_token']
-                access_token_secret = secrets['access_token_secret']
-                # Set up SNS
-                aws = getSecret('aws-arn')
-                client = boto3.client('sns')
-                # Tweepy auth
-                auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-                auth.set_access_token(access_token, access_token_secret)
-                api = tweepy.API(auth)
-                # Construct tweet text
-                content = "{0} - {1}: {2}".format(mag,loc,url)
-                try:
-                    # Send tweet (Uncomment to go live)
-                    api.update_status(status=content)
-                    # Send text (Uncomment to go live)
-                    response = client.publish(TopicArn=aws,Message=content)
-                    logger.debug('Success! Data sent: ' + content)
-                except tweepy.TweepError as err:
-                    logger.error(err)
-                    success = False
+                # If magnitude 3.0 or bigger (start with 1 for testing)
+                if (mag > 1):
+                    logger.debug("{0}, {1}: CASCADIA!!!".format(newlon, newlat))
+                    # Get access token from secrets.json
+                    secrets = getSecret('twitter-rob')
+                    consumer_key = secrets['consumer_key']
+                    consumer_secret = secrets['consumer_secret']
+                    access_token = secrets['access_token']
+                    access_token_secret = secrets['access_token_secret']
+                    # Set up SNS
+                    aws = getSecret('aws-arn')
+                    client = boto3.client('sns')
+                    # Tweepy auth
+                    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+                    auth.set_access_token(access_token, access_token_secret)
+                    api = tweepy.API(auth)
+                    # Construct tweet text
+                    content = "{0} - {1}: {2}".format(mag,loc,url)
+                    try:
+                        # Send tweet (Uncomment to go live)
+                        api.update_status(status=content)
+                        # Send text (Uncomment to go live)
+                        response = client.publish(TopicArn=aws,Message=content)
+                        logger.debug('Success! Data sent: ' + content)
+                    except tweepy.TweepError as err:
+                        logger.error(err)
+                        success = False
     logger.debug("new length: {}".format(len(new)))
     # Open up id file to override
     new_id_json = open('{0}/id.json'.format(dir_path), 'w')
