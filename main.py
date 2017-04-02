@@ -81,7 +81,7 @@ if len(quakes):
             # and (40.6 < newlat < 49.6)
             if (-128.8 < newlon < -121.3) and (40.6 < newlat < 49.6):
                 # If magnitude 3.0 or bigger (start with 1 for testing)
-                if (mag > 1):
+                if (mag > 3):
                     logger.debug("{0}, {1}: CASCADIA!!!".format(newlon, newlat))
                     # Get access token from secrets.json
                     secrets = getSecret('twitter-rob')
